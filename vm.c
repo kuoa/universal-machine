@@ -5,7 +5,7 @@
 #include <string.h>
 
 #define NB_REGISTERS 8
-#define MAX_ARRAY_SIZE 1 << 26
+#define MAX_ARRAY_SIZE 1 << 20
 #define MOD_VALUE 4294967296
 
 #define EXIT_STOP 42
@@ -103,7 +103,7 @@ void start_vm(vm_t *vm){
                 if(debug){
                     fprintf(stderr, "ADD: r[%d]=%d r[%d]=%d r[%d]=%d\n", a, r[a], b, r[b], c, r[c]);    
                 }
-                r[a] = (r[b] + r[c]) % MOD_VALUE;
+                r[a] = (r[b] + r[c]);
                 
                 //fprintf(stderr, "r[%d]=%d r[%d]=%d r[%d]=%d\n", a, r[a], b, r[b], c, r[c]);    
                 break;
@@ -112,7 +112,7 @@ void start_vm(vm_t *vm){
                 if(debug){
                     fprintf(stderr, "MULT: r[%d]=%d r[%d]=%d r[%d]=%d\n", a, r[a], b, r[b], c, r[c]);    
                 }        
-                r[a] = (r[b] * r[c]) % MOD_VALUE;                
+                r[a] = (r[b] * r[c]);             
                 break;
             
             case DIV: {
@@ -147,12 +147,20 @@ void start_vm(vm_t *vm){
                 uint32_t i;
                 
                 // go from last index in loop
-                for(i = last_i + 1; i != last_i; i = (i + 1) % MAX_ARRAY_SIZE){
-               
+
+                //for(i = last_i + 1; i != last_i; i = (i + 1) % MAX_ARRAY_SIZE){
+                
+                for(i = last_i + 1; i != last_i; i++){
+
+                    if(i == MAX_ARRAY_SIZE){
+                        i = 1;
+                    }
                     if (arrays[i] == NULL){                                                
                         // place found
                         break;
                     }
+
+                   // printf("After brak%d\n", i);
                 }
                 
                 if(i == last_i){
@@ -172,7 +180,8 @@ void start_vm(vm_t *vm){
                     // save ptr + 1
                     arrays[i] = ptr + 1;
                     r[b] = i;
-                    last_i = i;                                                                            
+                    last_i = i;
+                    //printf("%d\n", i);                  
                 }                
                 //fprintf(stderr, "ALLOCAF: r[%d]=%d r[%d]=%d r[%d]=%d\n", a, r[a], b, r[b], c, r[c]);  
                 
